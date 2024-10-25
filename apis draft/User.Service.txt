@@ -1,0 +1,37 @@
+import axios from 'axios';
+import { HOST } from './Host';
+import { auth } from '../library/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
+ //last change
+ export async function login(credentials) {
+    try {
+      console.log(credentials);
+      const response = await signInWithNICAndPassword(auth, credentials.email, credentials.password);
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+      return await Promise.reject('Invalid NIC or Password !');
+    }
+  }
+
+  export async function adduser(newuser) {
+    try {
+      const response = await axios.post(`${HOST}/api/user`, newuser);
+      return response;
+    } catch (err) {
+      console.log(err);
+      return await Promise.reject('User Registration was Failed !');
+    }
+  }
+
+  export const verifyOtp = async (otpData) => {
+    try {
+      const response = await axios.post('/api/verify-otp', otpData); // Replace with your actual API endpoint
+      return response.data;
+    } catch (error) {
+      console.error('OTP verification error:', error);
+      throw error.response ? error.response.data : new Error('Server error');
+    }
+
+  
