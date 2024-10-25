@@ -1,7 +1,7 @@
 import { Card, Form, Input, Button, message } from "antd";
 import { login } from "../apis/User.Service";
 
-export default function LoginReg() {
+export default function LoginReg({ onLogin }) {
   const onFinish = async (values) => {
     const credentials = {
       nic: values.nic,
@@ -13,11 +13,12 @@ export default function LoginReg() {
 
       // Show success message if login is successful
       if (data.token) {
+        onLogin(data.token);
         message.success("Login successful!");
       }
     } catch (err) {
       // Show error message if login fails
-      message.error(err);
+      message.error(err.toString());
     }
   };
 
