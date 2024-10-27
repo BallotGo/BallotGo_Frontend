@@ -1,74 +1,156 @@
-import React, { useState } from "react";
-import { Card, Form, Radio, Button, message } from "antd";
-import { submitVote } from "../apis/Vote.Service";
+import React, { useState } from 'react';
+import { Button, Input, Typography, Card, Space, message, Radio, List } from 'antd';
+import { verifyOtpAndGetCandidates } from '../apis/Vote.Service';
+// import { blindTheVote } from '../utils/BlindVote';
 
-export default function VotingPage() {
+const { Title, Text } = Typography;
+
+export default function Vote() {
+  const [otp, setOtp] = useState('');
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [candidates, setCandidates] = useState([]);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
 
-  // List of candidates (can be fetched from an API)
-  const candidates = [
-    { id: 1, name: "Candidate A" },
-    { id: 2, name: "Candidate B" },
-    { id: 3, name: "Candidate C" },
-  ];
-
-  const onFinish = async () => {
-    if (!selectedCandidate) {
-      message.error("Please select a candidate before submitting.");
-      return;
+  const handleOtpChange = (e) => {
+    const input = e.target.value;
+    if (/^\d*$/.test(input) && input.length <= 6) {
+      setOtp(input); // Limit OTP to 6 digits
     }
+  };
 
-    // Prepare the vote data
-    const voteData = {
-      candidateId: selectedCandidate,
-    };
-
-    // Call the API to submit the vote
-    const result = await submitVote(voteData);
-    if (result.success) {
-      message.success("Your vote has been submitted successfully.");
-      // Optionally, navigate to a success page or show a confirmation modal
+  const handleSubmit = () => {
+    if (otp.length === 6) {
+      verifyOtpAndGetCandidates(otp).then((response) => {
+        if (response) {
+          const candidateList = response;
+          setCandidates(candidateList);
+          setOtpVerified(true);
+          message.success('OTP verified successfully!');
+        } else {
+          message.error('Invalid OTP. Please try again.');
+        }
+      });
     } else {
-      message.error(
-        "There was an error submitting your vote. Please try again."
-      );
+      message.error('Please enter a valid 6-digit OTP.');
+    }
+  };
+
+  const handleVote = () => {
+    if (selectedCandidate) {
+      message.success(`You have voted for ${selectedCandidate}`);
+      // Voting logic here
+    } else {
+      message.warning('Please select a candidate to vote.');
     }
   };
 
   return (
-    <div className="voting-page">
-      <Card
-        title="Select Your Candidate"
-        style={{
-          margin: "20px auto",
-          width: "50%",
-          borderRadius: "15px",
-          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-        }}
-      >
-        <Form onFinish={onFinish}>
-          {/* Candidate selection using Radio buttons */}
-          <Form.Item>
-            <Radio.Group
-              onChange={(e) => setSelectedCandidate(e.target.value)}
-              value={selectedCandidate}
-            >
-              {candidates.map((candidate) => (
-                <Radio key={candidate.id} value={candidate.id}>
-                  {candidate.name}
-                </Radio>
-              ))}
-            </Radio.Group>
-          </Form.Item>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#f0f2f5',
+        padding: '20px',
+      }}
+    >
+      {!otpVerified ? (
+        <Card
+          style={{
+            width: '100%',
+            maxWidth: '400px',
+            borderRadius: '10px',
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+            padding: '30px',
+            textAlign: 'center',
+          }}
+        >
+          <Title level={3} style={{ marginBottom: '20px' }}>
+            Enter OTP
+          </Title>
+          <Text
+            type='secondary'
+            style={{ marginBottom: '30px', display: 'block' }}
+          >
+            A 6-digit OTP has been sent to your registered mobile number.
+          </Text>
 
-          {/* Submit Button */}
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Submit Vote
+          <Space direction='vertical' size='large' style={{ width: '100%' }}>
+            <Input
+              value={otp}
+              onChange={handleOtpChange}
+              maxLength={6}
+              placeholder='Enter OTP'
+              style={{
+                textAlign: 'center',
+                fontSize: '20px',
+                padding: '10px',
+              }}
+            />
+
+            <Button
+              type='primary'
+              onClick={handleSubmit}
+              style={{ width: '100%' }}
+            >
+              Submit
             </Button>
-          </Form.Item>
-        </Form>
-      </Card>
+          </Space>
+        </Card>
+      ) : (
+        <Card
+          style={{
+            width: '100%',
+            maxWidth: '400px',
+            borderRadius: '10px',
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+            padding: '30px',
+            textAlign: 'center',
+          }}
+        >
+          <Title level={3} style={{ marginBottom: '20px' }}>
+            Cast Your Vote
+          </Title>
+          <Text
+            type='secondary'
+            style={{ marginBottom: '30px', display: 'block' }}
+          >
+            Select a candidate to cast your vote.
+          </Text>
+
+          <Radio.Group
+            onChange={(e) => setSelectedCandidate(e.target.value)}
+            value={selectedCandidate}
+            style={{ width: '100%' }}
+          >
+            <List
+              dataSource={candidates}
+              renderItem={(candidate) => (
+                <List.Item
+                  style={{
+                    padding: '15px',
+                    backgroundColor: '#fafafa',
+                    borderRadius: '8px',
+                    marginBottom: '10px',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  }}
+                >
+                  <Radio value={candidate.name} style={{ width: '100%' }}>
+                    <div style={{ fontSize: '16px', fontWeight: '500' }}>
+                      {candidate.name}
+                    </div>
+                  </Radio>
+                </List.Item>
+              )}
+            />
+          </Radio.Group>
+
+          <Button type='primary' onClick={handleVote} style={{ width: '100%' }}>
+            Submit Vote
+          </Button>
+        </Card>
+      )}
     </div>
   );
 }
