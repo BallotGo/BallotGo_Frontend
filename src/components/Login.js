@@ -19,7 +19,7 @@ export default function LoginReg() {
       }
     } catch (err) {
       // Show error message if login fails
-      message.error(err);
+      message.error(err.toString());
     }
   };
 
