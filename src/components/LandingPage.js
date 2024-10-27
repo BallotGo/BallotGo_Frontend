@@ -16,6 +16,14 @@ const LandingPage = () => {
     navigate('/register');
   };
 
+  const handleUniversalVerifiability = () => {
+    navigate('/universal-verifiability');
+  }
+
+  const handleResults = () => {
+    navigate('/results');
+  }
+
   return (
     <Layout style={{ minHeight: '100vh', backgroundColor: '#f0f2f5' }}>
       <Header style={{ backgroundColor: '#001529', textAlign: 'center' }}>
@@ -55,6 +63,12 @@ const LandingPage = () => {
           </Button>
           <Button type='default' size='large' style={{ width: '150px' }} onClick={handleRegister}>
             Register
+          </Button>
+          <Button type='default' size='large' style={{ width: '200px' }} onClick={handleUniversalVerifiability}>
+            Universal Verifiability
+          </Button>
+          <Button type='primary' size='large' style={{ width: '150px' }} onClick={handleResults}>
+            Results
           </Button>
         </Space>
       </Content>

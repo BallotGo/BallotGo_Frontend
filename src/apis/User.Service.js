@@ -13,13 +13,12 @@ export async function login(credentials) {
     // Check for a successful login response
     if (response.status === 200 && response.data.token) {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('publicKey', response.data.publicKey);
+      localStorage.setItem('publicKey', response.data.publicKeyPem);
       return response.data;
     } else {
       throw new Error("Invalid login credentials");
     }
   } catch (err) {
-    console.log(err);
     return await Promise.reject("Invalid NIC or Password !");
   }
 }
@@ -29,7 +28,6 @@ export async function userRegisterForVoting(newuser) {
     const response = await axios.post(`${HOST}/api/user/register`, newuser);
     return response;
   } catch (err) {
-    console.log(err);
     return await Promise.reject("User Registration was Failed !");
   }
 }
@@ -39,7 +37,6 @@ export async function verifyOTP(otp) {
     const response = await axios.post(`${HOST}/api/user/verify-otp`, otp);
     return response;
   } catch (err) {
-    console.log(err);
     return await Promise.reject("OTP verification failed !");
   }
 }

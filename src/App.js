@@ -8,6 +8,9 @@ import UserRegister from './components/UserRegister';
 import UsernamePasswordRegister from './components/UsernamePasswordRegister';
 import Dashboard from './components/Dashboard';
 import Vote from './components/VotePage';
+import VerifyVotePage from './components/verifyVotePage';
+import Results from './components/Results';
+import UniversalVerifiability from './components/UniversalVerifiability';
 
 function App() {
   return (
@@ -21,6 +24,8 @@ function App() {
             path='/register/username-password'
             element={<UsernamePasswordRegister />}
           />
+          <Route path='/results' element={<Results />} />
+          <Route path='/universal-verifiability' element={<UniversalVerifiability />} />
           <Route
             path='/dashboard'
             element={
@@ -34,6 +39,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Vote />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/dashboard/verify'
+            element={
+              <ProtectedRoute>
+                <VerifyVotePage />
               </ProtectedRoute>
             }
           />

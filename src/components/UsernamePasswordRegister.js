@@ -13,8 +13,7 @@ export default function UsernamePasswordRegister() {
     };
 
     try {
-      const data = await verifyOTP(credentials);
-      console.log(data);
+      await verifyOTP(credentials);
       navigate('/login');
     } catch (err) {
       message.error(err);

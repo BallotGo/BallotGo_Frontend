@@ -15,12 +15,10 @@ export default function UserRegister() {
       date_of_birth: values.date_of_birth
     };
 
-    console.log(registerData);
     try {
       await userRegisterForVoting(registerData);
       navigate('/register/username-password');
     } catch (err) {
-      console.log(err);
     }
   };
 
