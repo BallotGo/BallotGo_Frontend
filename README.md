@@ -9,7 +9,7 @@ Welcome to the backend repository for **BallotGo**, an e-voting application desi
 - **Vote Submission with Verification:** OTP verification and blind signatures to confirm votes securely.
 - **Database Management:** Utilizing Sequelize ORM for PostgreSQL integration.
 
-> [Frontend Repository for BallotGo](https://github.com/username/ballotgo-frontend)
+> [Frontend Repository for BallotGo](https://github.com/BallotGo/BallotGo_Frontend)
 
 ## Project Overview
 
@@ -116,7 +116,9 @@ The combination of end-to-end encryption, individual verifiability, and universa
 
 ## Contribution
 
-
+   1. > [Udara Wijesinghe](https://github.com/Udaramalinda)
+   2. > [Vishvadini Kurukulasooriya](https://github.com/Zury7)
+   3. > [Sanuja Edirisinghe](https://github.com/sanujaediri)
 
 
 
