@@ -1,42 +1,57 @@
-import "./App.css";
-import { Button } from "antd";
-import LoginReg from "./components/Login";
-import VotePage from "./components/VotePage";
-import { useState } from "react";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './utils/ProtectedRoute';
+
+import LandingPage from './components/LandingPage';
+import LoginReg from './components/Login';
+import UserRegister from './components/UserRegister';
+import UsernamePasswordRegister from './components/UsernamePasswordRegister';
+import Dashboard from './components/Dashboard';
+import Vote from './components/VotePage';
+import VerifyVotePage from './components/verifyVotePage';
+import Results from './components/Results';
+import UniversalVerifiability from './components/UniversalVerifiability';
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("authToken"));
-
-  const logout = () => {
-    localStorage.removeItem("authToken"); // Remove token
-    setToken(null); // Update state to re-render
-  };
-
-  const handleLogin = (newToken) => {
-    localStorage.setItem("authToken", newToken);
-    setToken(newToken); // Update the token state
-  };
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>BallotGo</h1>
-        <p>BallotGo Dashboard</p>
-        {token ? (
-          <>
-            <VotePage />
-            <Button
-              type="primary"
-              onClick={logout}
-              style={{ marginTop: "20px" }}
-            >
-              Logout
-            </Button>
-          </>
-        ) : (
-          <LoginReg onLogin={handleLogin} /> // Pass the handleLogin function as a prop
-        )}
-      </header>
+    <div className='App'>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<LandingPage />} />
+          <Route path='/login' element={<LoginReg />} />
+          <Route path='/register' element={<UserRegister />} />
+          <Route
+            path='/register/username-password'
+            element={<UsernamePasswordRegister />}
+          />
+          <Route path='/results' element={<Results />} />
+          <Route path='/universal-verifiability' element={<UniversalVerifiability />} />
+          <Route
+            path='/dashboard'
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/dashboard/vote'
+            element={
+              <ProtectedRoute>
+                <Vote />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/dashboard/verify'
+            element={
+              <ProtectedRoute>
+                <VerifyVotePage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
